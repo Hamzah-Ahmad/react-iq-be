@@ -15,6 +15,10 @@ async function bootstrap() {
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  await app.listen(3000);
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  });
+  await app.listen(4010);
 }
 bootstrap();
