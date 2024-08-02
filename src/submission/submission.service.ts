@@ -26,6 +26,11 @@ export class SubmissionService {
         questionId,
       },
       relations: ['user', 'likes'],
+      select: {
+        likes: {
+          id: true,
+        },
+      },
     });
   }
 
@@ -52,8 +57,10 @@ export class SubmissionService {
     if (!submission) throw new NotFoundException('Submission Not Found');
 
     if (submission.likes?.map((userLiked) => userLiked.id)?.includes(user.id)) {
-      submission.likes = submission.likes.filter((userLiked) => userLiked.id !== user.id);
-      console.log(submission.likes, user.id)
+      submission.likes = submission.likes.filter(
+        (userLiked) => userLiked.id !== user.id,
+      );
+      console.log(submission.likes, user.id);
     } else {
       submission.likes.push(user);
     }
