@@ -21,11 +21,24 @@ export class SubmissionController {
     );
   }
 
+  @Get(`:questionId`)
+  getSubmissions(@Param('questionId') questionId: string) {
+    return this.submissionService.getSubmissions(questionId);
+  }
+
   @Get('/user/:questionId')
   getSubmissionByUser(
     @CurrentUser() user: User,
     @Param('questionId') questionId: string,
   ) {
-    return this.submissionService.getSubmission(user.id, questionId);
+    return this.submissionService.getUserSubmission(user.id, questionId);
+  }
+
+  @Post('/:submissionId/like')
+  updateLikeOnSubmission(
+    @CurrentUser() user: User,
+    @Param('submissionId') submissionId: string,
+  ) {
+    return this.submissionService.updateLikeOnSubmission(submissionId, user);
   }
 }

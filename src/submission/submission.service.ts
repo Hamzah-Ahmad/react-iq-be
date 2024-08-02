@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Submission } from './entities/submission.entity';
 import { Repository } from 'typeorm';
+import { User } from '../user/entities/User.entity';
 
 @Injectable()
 export class SubmissionService {
@@ -19,12 +20,44 @@ export class SubmissionService {
     return await this.submissionRepository.save(submission);
   }
 
-  async getSubmission(userId: string, questionId: string) {
+  async getSubmissions(questionId: string) {
+    return this.submissionRepository.find({
+      where: {
+        questionId,
+      },
+      relations: ['user', 'likes'],
+    });
+  }
+
+  async getUserSubmission(userId: string, questionId: string) {
     return this.submissionRepository.findOne({
       where: {
         questionId,
         userId,
       },
     });
+  }
+
+  async updateLikeOnSubmission(submissionId: string, user: User) {
+    const submission = await this.submissionRepository.findOne({
+      where: {
+        id: submissionId,
+      },
+      relations: ['likes'],
+      select: {
+        id: true,
+      },
+    });
+
+    if (!submission) throw new NotFoundException('Submission Not Found');
+
+    if (submission.likes?.map((userLiked) => userLiked.id)?.includes(user.id)) {
+      submission.likes = submission.likes.filter((userLiked) => userLiked.id !== user.id);
+      console.log(submission.likes, user.id)
+    } else {
+      submission.likes.push(user);
+    }
+
+    return this.submissionRepository.save(submission);
   }
 }

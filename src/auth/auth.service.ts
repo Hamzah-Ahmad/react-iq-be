@@ -39,15 +39,16 @@ export class AuthService {
   async login(user: User) {
     const tokens = await this.getTokens(user.id, user.email);
     await this.updateUserRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    delete user.refreshToken;
+    return { ...tokens, user };
   }
 
   async signup(createUserInput: CreateUserDto) {
     const user = await this.userService.createUser(createUserInput);
     const tokens = await this.getTokens(user.id, user.email);
     await this.updateUserRefreshToken(user.id, tokens.refreshToken);
-
-    return tokens;
+    delete user.refreshToken;
+    return { ...tokens, user };
   }
 
   async updateUserRefreshToken(userId: string, refreshToken: string) {
@@ -98,7 +99,8 @@ export class AuthService {
     if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
     const tokens = await this.getTokens(user.id, user.email);
     await this.updateUserRefreshToken(user.id, tokens.refreshToken);
-    return tokens;
+    delete user.refreshToken;
+    return { ...tokens, user };
   }
 
   async logout(userId: string) {

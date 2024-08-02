@@ -35,10 +35,11 @@ export class AuthController {
     @CurrentUser() user: User,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const tokens = await this.authService.login(user);
-    response.cookie('refreshToken', tokens.refreshToken, this.cookieConfig);
+    const data = await this.authService.login(user);
+    response.cookie('refreshToken', data.refreshToken, this.cookieConfig);
     return {
-      accessToken: tokens.accessToken,
+      accessToken: data.accessToken,
+      user: data.user
     };
   }
 
@@ -48,10 +49,10 @@ export class AuthController {
     @Body() createUserInput: CreateUserDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const tokens = await this.authService.signup(createUserInput);
-    response.cookie('refreshToken', tokens.refreshToken, this.cookieConfig);
+    const data = await this.authService.signup(createUserInput);
+    response.cookie('refreshToken', data.refreshToken, this.cookieConfig);
     return {
-      accessToken: tokens.accessToken,
+      accessToken: data.accessToken,
     };
   }
 
@@ -70,13 +71,14 @@ export class AuthController {
   ) {
     const user = req.user;
     const refreshToken = req.user['refreshToken'];
-    const tokens = await this.authService.refreshTokens(
+    const data = await this.authService.refreshTokens(
       user?.userId,
       refreshToken,
     );
-    response.cookie('refreshToken', tokens.refreshToken, this.cookieConfig);
+    response.cookie('refreshToken', data.refreshToken, this.cookieConfig);
     return {
-      accessToken: tokens.accessToken,
+      accessToken: data.accessToken,
+      user: data.user
     };
   }
 

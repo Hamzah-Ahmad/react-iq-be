@@ -1,5 +1,11 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { Submission } from '../../submission/entities/submission.entity';
 
@@ -36,4 +42,7 @@ export class User {
 
   @OneToMany(() => Submission, (submission) => submission.user)
   submissions: Submission[];
+
+  @ManyToMany(() => Submission, (submission) => submission.likes)
+  likedSubmissions: Submission[];
 }

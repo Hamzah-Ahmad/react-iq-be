@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Question } from './entities/question.entity';
 import { Repository } from 'typeorm';
@@ -12,6 +12,7 @@ export class QuestionService {
     private readonly questionRepository: Repository<Question>,
   ) {}
 
+  // The leftJoinAndSelect is to get all questions, and also to get all the submissions of the current user
   async getAllQuestions(user?: User) {
     let questions = await this.questionRepository
       .createQueryBuilder('question')
@@ -35,7 +36,7 @@ export class QuestionService {
   }
 
   async getQuestionById(questionId: string, user?: User) {
-    let questions = await this.questionRepository
+    const question = await this.questionRepository
       .createQueryBuilder('question')
       .leftJoinAndSelect(
         'question.submissions',
@@ -44,8 +45,13 @@ export class QuestionService {
         { userId: user?.id },
       )
       .where('question.id = :questionId', { questionId })
-      .getMany();
+      .getOne();
 
-    return questions;
+    if (!question)
+      throw new NotFoundException([
+        'A question with the provided ID was not found',
+      ]);
+
+    return question;
   }
 }

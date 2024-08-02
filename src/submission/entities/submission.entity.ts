@@ -1,4 +1,11 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { Question } from '../../question/entities/question.entity';
 import { User } from '../../user/entities/User.entity';
@@ -25,4 +32,8 @@ export class Submission {
 
   @ManyToOne(() => User, (user) => user.submissions)
   user: User;
+
+  @ManyToMany(() => User, (user) => user.likedSubmissions, { cascade: true })
+  @JoinTable()
+  likes: User[];
 }

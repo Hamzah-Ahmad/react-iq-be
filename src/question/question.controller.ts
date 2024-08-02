@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
-import { Public } from '../auth/decorators/public.decorator';
+import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+
 import { QuestionService } from './question.service';
 import { ApplyUser } from '../auth/guards/apply-user.guard';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('question')
 export class QuestionController {
@@ -16,7 +17,7 @@ export class QuestionController {
   @Public()
   @UseGuards(ApplyUser)
   @Get(':questionId')
-  getQuestionById(@Req() request, @Param() questionId: string) {
-    return this.questionService.getQuestionById(questionId, request?.user);
+  getQuestionById(@Param('questionId') questionId: string) {
+    return this.questionService.getQuestionById(questionId);
   }
 }
