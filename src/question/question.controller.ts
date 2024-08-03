@@ -15,8 +15,7 @@ export class QuestionController {
     return this.questionService.getAllQuestions(request?.user);
   }
   @Public()
-  @UseGuards(ApplyUser)
-  @Get(':questionId')
+  @Get('/:questionId')
   getQuestionById(@Param('questionId') questionId: string) {
     return this.questionService.getQuestionById(questionId);
   }

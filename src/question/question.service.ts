@@ -35,17 +35,22 @@ export class QuestionService {
     return response;
   }
 
-  async getQuestionById(questionId: string, user?: User) {
-    const question = await this.questionRepository
-      .createQueryBuilder('question')
-      .leftJoinAndSelect(
-        'question.submissions',
-        'submission',
-        'submission.userId = :userId OR submission.userId IS NULL',
-        { userId: user?.id },
-      )
-      .where('question.id = :questionId', { questionId })
-      .getOne();
+  async getQuestionById(questionId: string) {
+    // const question = await this.questionRepository
+    //   .createQueryBuilder('question')
+    //   .leftJoinAndSelect(
+    //     'question.submissions',
+    //     'submission',
+    //     'submission.userId = :userId OR submission.userId IS NULL',
+    //     { userId: user?.id },
+    //   )
+    //   .where('question.id = :questionId', { questionId })
+    //   .getOne();
+    const question = await this.questionRepository.findOne({
+      where: {
+        id: questionId,
+      },
+    });
 
     if (!question)
       throw new NotFoundException([

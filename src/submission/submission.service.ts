@@ -21,7 +21,7 @@ export class SubmissionService {
   }
 
   async getSubmissions(questionId: string) {
-    return this.submissionRepository.find({
+    const submissions = await this.submissionRepository.find({
       where: {
         questionId,
       },
@@ -32,6 +32,11 @@ export class SubmissionService {
         },
       },
     });
+
+    return submissions.map((submission) => ({
+      ...submission,
+      likes: submission.likes.map((like) => like.id),
+    }));
   }
 
   async getUserSubmission(userId: string, questionId: string) {
