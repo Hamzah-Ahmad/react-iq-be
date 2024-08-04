@@ -17,7 +17,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    // "noUnusedLocals": true,
-    // "noUncheckedIndexedAccess": true
+    "noUnusedLocals": true,
+    "noUncheckedIndexedAccess": true
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Req, UseGuards } from '@nestjs/common';
 
 import { QuestionService } from './question.service';
 import { ApplyUser } from '../auth/guards/apply-user.guard';
