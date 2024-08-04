@@ -45,7 +45,7 @@ export class CommentController {
   }
 
   @Get('/submission/:submissionId')
-  getCommentsByPosts(@Param('submissionId') submissionId: string) {
+  getCommentsBySubmission(@Param('submissionId') submissionId: string) {
     return this.commentService.getCommentsBySubmission(submissionId);
   }
 
