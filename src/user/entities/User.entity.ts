@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 
 import { Submission } from '../../submission/entities/submission.entity';
+import { Comment } from '../../comment/entities/comment.entity';
 
 export enum Role {
   User = 'user',
@@ -45,4 +46,7 @@ export class User {
 
   @ManyToMany(() => Submission, (submission) => submission.likes)
   likedSubmissions: Submission[];
+
+  @OneToMany(() => Comment, (comment) => comment.author)
+  comments: Comment[];
 }

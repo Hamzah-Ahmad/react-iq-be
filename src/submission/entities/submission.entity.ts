@@ -4,11 +4,13 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { Question } from '../../question/entities/question.entity';
 import { User } from '../../user/entities/User.entity';
+import { Comment } from '../../comment/entities/comment.entity';
 
 @Entity()
 export class Submission {
@@ -36,4 +38,10 @@ export class Submission {
   @ManyToMany(() => User, (user) => user.likedSubmissions, { cascade: true })
   @JoinTable()
   likes: User[];
+
+  @OneToMany(() => Comment, (comment) => comment.submission)
+  comments: Comment[];
+
+  commentCount: number;
+
 }
