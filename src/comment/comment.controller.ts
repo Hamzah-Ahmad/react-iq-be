@@ -12,6 +12,7 @@ import { User } from '../user/entities/User.entity';
 import { CreateCommentDto } from './dto/createComment.dto';
 import { CommentService } from './comment.service';
 import { UpdateCommentDto } from './dto/updateComment.dto';
+import { Public } from 'src/auth/decorators/public.decorator';
 
 @Controller('comment')
 export class CommentController {
@@ -39,11 +40,13 @@ export class CommentController {
     return this.commentService.addReplyToComment(body, parentId, user.id);
   }
 
+  @Public()
   @Get(`/reply/:parentId`)
   getReplies(@Param('parentId') parentId: string) {
     return this.commentService.getReplies(parentId);
   }
 
+  @Public()
   @Get('/submission/:submissionId')
   getCommentsBySubmission(@Param('submissionId') submissionId: string) {
     return this.commentService.getCommentsBySubmission(submissionId);
