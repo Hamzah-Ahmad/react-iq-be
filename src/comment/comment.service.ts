@@ -90,6 +90,7 @@ export class CommentService {
     const comments = await this.commentRepository
       .createQueryBuilder('comment')
       .where('comment.parentId = :parentId', { parentId })
+      .leftJoinAndSelect('comment.author', 'author')
       .loadRelationCountAndMap('comment.replyCount', 'comment.replies')
       .getMany();
     return comments;
@@ -100,6 +101,7 @@ export class CommentService {
       .createQueryBuilder('comment')
       .where('comment.submissionId = :submissionId', { submissionId })
       .andWhere('comment.parentId IS NULL')
+      .leftJoinAndSelect('comment.author', 'author')
       .loadRelationCountAndMap('comment.replyCount', 'comment.replies')
       .getMany();
 
