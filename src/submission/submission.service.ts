@@ -75,7 +75,7 @@ export class SubmissionService {
       where: {
         id: submissionId,
       },
-      relations: ['user'],
+      // relations: ['user'],
     });
   }
 
