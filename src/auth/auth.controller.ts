@@ -53,6 +53,7 @@ export class AuthController {
     response.cookie('refreshToken', data.refreshToken, this.cookieConfig);
     return {
       accessToken: data.accessToken,
+      user: data.user
     };
   }
 

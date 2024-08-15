@@ -1,9 +1,9 @@
 version: "3.8"
 
 services:
-  reactiq_auth: #use this name in the adminer login screen server
+  reactiq_db: #use this name in the adminer login screen server
     image: postgres:13.1
-    container_name: reactiq_auth
+    container_name: reactiq_db
     restart: always
     env_file:
       - .env
@@ -19,7 +19,7 @@ services:
   adminer:
     image: adminer
     depends_on:
-      - reactiq_auth
+      - reactiq_db
     restart: always
     ports:
       - ${ADMINER_PORT}:8080
