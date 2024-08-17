@@ -3,7 +3,7 @@ import { SubmissionService } from './submission.service';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from '../user/entities/User.entity';
 import { SubmissionDto } from './dto/submission.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('submission')
 export class SubmissionController {

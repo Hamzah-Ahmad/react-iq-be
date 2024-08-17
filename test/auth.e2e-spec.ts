@@ -1,6 +1,5 @@
 import * as request from 'supertest';
 import { server, dataSource } from './setup';
-import { DataSource } from 'typeorm';
 import { User } from '../src/user/entities/User.entity';
 
 describe('AppController (e2e)', () => {

@@ -12,7 +12,7 @@ import { User } from '../user/entities/User.entity';
 import { CreateCommentDto } from './dto/createComment.dto';
 import { CommentService } from './comment.service';
 import { UpdateCommentDto } from './dto/updateComment.dto';
-import { Public } from 'src/auth/decorators/public.decorator';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('comment')
 export class CommentController {
