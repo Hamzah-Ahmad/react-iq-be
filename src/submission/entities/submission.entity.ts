@@ -6,11 +6,25 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
+  ValueTransformer,
 } from 'typeorm';
+import * as zlib from 'zlib';
 
 import { Question } from '../../question/entities/question.entity';
 import { User } from '../../user/entities/User.entity';
 import { Comment } from '../../comment/entities/comment.entity';
+
+export class CodeTransformer implements ValueTransformer {
+  to(value: string): Buffer {
+    if(!value) return null;
+    return zlib.deflateSync(value);
+  }
+
+  from(value: Buffer): string {
+    if(!value) return null;
+    return zlib.inflateSync(value).toString();
+  }
+}
 
 @Entity()
 export class Submission {
@@ -26,7 +40,13 @@ export class Submission {
   // @Column('bytea')
   // code: Buffer;
 
-  @Column()
+  // @Column()
+  // code: string;
+
+  @Column({
+    type: 'bytea',
+    transformer: new CodeTransformer(),
+  })
   code: string;
 
   @ManyToOne(() => Question, (question) => question.submissions)
@@ -43,5 +63,4 @@ export class Submission {
   comments: Comment[];
 
   commentCount: number;
-
 }
