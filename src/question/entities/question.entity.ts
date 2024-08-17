@@ -16,6 +16,9 @@ export class Question {
   @Column('simple-array', { default: [] })
   hints: string[];
 
+  @Column({nullable: true})
+  asset: string;
+
   @OneToMany(() => Submission, (submission) => submission.question)
   submissions: Submission[];
 }
