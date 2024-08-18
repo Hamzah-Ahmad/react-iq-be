@@ -16,9 +16,11 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: process.env.CLIENT_ORIGIN,
     credentials: true,
   });
-  await app.listen(4010);
+  const PORT = process.env.PORT || 4010;
+  const HOST = `0.0.0.0`;
+  await app.listen(PORT, HOST);
 }
 bootstrap();
