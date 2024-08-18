@@ -16,8 +16,9 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
   app.enableCors({
-    origin: "*",
+    origin: process.env.CLIENT_ORIGIN, // Replace with your React app's URL
     credentials: true,
+    methods: 'GET,POST,PUT,DELETE,OPTIONS',
     allowedHeaders: 'Content-Type, Authorization',
   });
   const PORT = process.env.PORT || 4010;
