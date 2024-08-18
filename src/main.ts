@@ -15,10 +15,7 @@ async function bootstrap() {
   app.use(helmet());
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  app.enableCors({
-    origin: process.env.CLIENT_ORIGIN,
-    credentials: true,
-  });
+  app.enableCors();
   const PORT = process.env.PORT || 4010;
   const HOST = `0.0.0.0`;
   await app.listen(PORT, HOST);
