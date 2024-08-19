@@ -92,6 +92,7 @@ export class CommentService {
       .where('comment.parentId = :parentId', { parentId })
       .leftJoinAndSelect('comment.author', 'author')
       .loadRelationCountAndMap('comment.replyCount', 'comment.replies')
+      .orderBy('comment.createdDate', 'DESC') 
       .getMany();
     return comments;
   }
@@ -103,6 +104,7 @@ export class CommentService {
       .andWhere('comment.parentId IS NULL')
       .leftJoinAndSelect('comment.author', 'author')
       .loadRelationCountAndMap('comment.replyCount', 'comment.replies')
+      .orderBy('comment.createdDate', 'DESC') 
       .getMany();
 
     return comments;
