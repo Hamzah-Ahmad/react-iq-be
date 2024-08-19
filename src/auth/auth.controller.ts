@@ -15,7 +15,7 @@ import { Public } from './decorators/public.decorator';
 import { RefreshTokenGuard } from './guards/refresh-token.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CreateUserDto } from '../user/dto/CreateUserDto';
-import { Response } from 'express';
+import { CookieOptions, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +24,9 @@ export class AuthController {
   cookieConfig = {
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-  };
+    secure: process.env.NODE_ENV === 'production', // Set Secure flag only in production
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict' // This value is required for cross-site cookies
+  } as CookieOptions;
 
   @Public()
   @Post('login')
