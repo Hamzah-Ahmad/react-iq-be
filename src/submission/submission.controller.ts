@@ -36,6 +36,7 @@ export class SubmissionController {
     return this.submissionService.getUserSubmission(user.id, questionId);
   }
 
+  @Public()
   @Get('/byId/:submission')
   getSubmissionById(@Param('submissionId') submissionId: string) {
     return this.submissionService.getSubmissionById(submissionId);
