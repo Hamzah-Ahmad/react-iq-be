@@ -71,12 +71,15 @@ export class SubmissionService {
   }
 
   async getSubmissionById(submissionId: string) {
-    return this.submissionRepository.findOne({
+    const res =  this.submissionRepository.findOne({
       where: {
         id: submissionId,
       },
       // relations: ['user'],
     });
+
+    console.log("res: ", res)
+    return res;
   }
 
   async updateLikeOnSubmission(submissionId: string, user: User) {
