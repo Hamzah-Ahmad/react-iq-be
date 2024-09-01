@@ -47,9 +47,8 @@ export class SubmissionService {
 
     const submissions = await this.submissionRepository
       .createQueryBuilder('submission')
-      .leftJoinAndSelect('submission.user', 'user')
+      .innerJoinAndSelect('submission.user', 'user')
       .leftJoinAndSelect('submission.likes', 'likes')
-      .leftJoinAndSelect('submission.comments', 'comments')
       .loadRelationCountAndMap('submission.commentCount', 'submission.comments')
       .select(['submission', 'user', 'likes.id'])
       .where('submission.questionId = :questionId', { questionId })
