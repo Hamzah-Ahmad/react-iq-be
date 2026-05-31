@@ -41,50 +41,55 @@ export class CommentService {
     return await this.commentRepository.save(newComment);
   }
 
-  async addReplyToComment(
-    replyBody: CreateCommentDto,
-    parentId: string,
-    userId: string,
-  ) {
-    const parentComment = await this.commentRepository.findOne({
-      where: {
-        id: parentId,
-      },
-      select: {
-        id: true, // for performance
-        submissionId: true, // for relation below in newReply
-      },
-      // relations: ['replies'],
-    });
+    async addReplyToComment(
+      replyBody: CreateCommentDto,
+      parentId: string,
+      userId: string,
+    ) {
+      const parentComment = await this.commentRepository.findOne({
+        where: {
+          id: parentId,
+        },
+        select: {
+          id: true, // for performance
+          submissionId: true, // for relation below in newReply
+        },
+        // relations: ['replies'],
+      });
 
-    if (!parentComment) {
-      throw new NotFoundException(
-        'Failed to add reply. A comment with the provided ID was not found',
-      );
+      if (!parentComment) {
+        throw new NotFoundException(
+          'Failed to add reply. A comment with the provided ID was not found',
+        );
+      }
+      const newReply = this.commentRepository.create({
+        ...replyBody,
+        authorId: userId,
+        parentId: parentComment.id, // We are getting parentComment from above so we can use this. We could  also use the parentId we get from the arguments. But using the parentComment ID this way ensures that there is a comment with this ID in the db
+        submissionId: parentComment.submissionId,
+      });
+
+      // parentComment.replies = [...parentComment.replies, newReply]; // using {cascade: true} in the relations with replies allows the newReply to be saved when parentComment is saved. But using append like this can cause performance issues because we are spreading everytime which might cause problemsif there are too many replies
+      // To use this approach:
+      // 1. In the findOne call, add `replies: true` to the select option and uncomment `relations: ['replies']`,
+      //    otherwise parentComment.replies will be undefined at runtime and the spread will throw.
+      // 2. Save the parentComment instead of newReply i.e. `this.commentRepository.save(parentComment)`.
+      //    cascade:true on the replies relation will then persist the new reply automatically.
+      // Note: this approach has performance drawbacks — all existing replies are loaded just to append one.
+      return await this.commentRepository.save(newReply);
+      // Doing the following can also work. Leaving it for future reference
+      // const parentComment = await this.commentRepository.findOne({
+      //   where: {
+      //     id: parentId,
+      //   },
+      // });
+      //   const newReply = await this.commentRepository.create({
+      //     ...commentBody,
+      //     authorId: user.id,
+      //   });
+      //   newReply.parent = parentComment;
+      //   return await this.commentRepository.save(newReply);
     }
-    const newReply = this.commentRepository.create({
-      ...replyBody,
-      authorId: userId,
-      parentId: parentComment.id, // We are getting parentComment from above so we can use this. We could  also use the parentId we get from the arguments. But using the parentComment ID this way ensures that there is a comment with this ID in the db
-      submissionId: parentComment.submissionId,
-    });
-
-    // parentComment.replies = [...parentComment.replies, newReply]; // using {cascade: true} in the relations with replies allows the newReply to be saved when parentComment is saved. But using append like this can cause performance issues because we are spreading everytime which might cause problemsif there are too many replies
-
-    return await this.commentRepository.save(newReply);
-    // Doing the following can also work. Leaving it for future reference
-    // const parentComment = await this.commentRepository.findOne({
-    //   where: {
-    //     id: parentId,
-    //   },
-    // });
-    //   const newReply = await this.commentRepository.create({
-    //     ...commentBody,
-    //     authorId: user.id,
-    //   });
-    //   newReply.parent = parentComment;
-    //   return await this.commentRepository.save(newReply);
-  }
 
   async getReplies(parentId: string) {
     const comments = await this.commentRepository
